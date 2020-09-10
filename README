@@ -1,0 +1,32 @@
+README.md
+
+-- CURRENT GAME MECHANICS
+(Basic)
+Platform collision and friction
+Jump / Hold jump
+Wall jump
+Move right
+Move left
+
+(Unique)
+"Colour Parkour" : jumping on platform makes last disappear and next appear
+"Color Pulse" :    reveals "hidden" platforms that blend into background color
+
+-- GAME OBJECTS
+player
+platforms
+
+// TODO: in "challenge mode", do not set platforms to "hidden", just turn off
+// collision. Their color will hide them.
+
+// TODO: REEALLY should lock viewport screen size if I can; all calculations done in
+// pixels so viewport size directly affects the physics (max, max jump height, accel, etc.)
+// Pretty good values:    outer/inner Width: 1160,      outer/inner Height: 967/904
+
+BUGS/FIXES:
+if you hold an input RIGHT after starting game before hitting ground, that input is
+disabled. Possible fix: disable inputs until player is on ground for first time.
+
+improve wall jumping and wall collision
+
+remove motion trails if possible

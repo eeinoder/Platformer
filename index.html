@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--meta name="viewport" content="user-scalable=no, width=1024px, initial-scale=1.0" /-->
+  <link rel="stylesheet" href="style/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="title noselect">
+  <h1>Platformer Demo</h1>
+  <div class="menu noselect">
+    <h2>Select Game Mode:</h2>
+    <p class="menu_button mode" id="classic">Classic</p>
+    <p class="menu_button mode" id="challenge">Challenge</p>
+    <h3 class="menu_button hidden" id="start_button">Start!</h3>
+  </div>
+</div>
+
+<div class="game hidden">
+  <!-- Player pulse object -->
+  <span class="pulse hidden" id="outerPulse"></span>
+  <span class="pulse hidden" id="innerPulse"></span>
+  <!-- Player objects -->
+  <div class="player" id="P1"></div>
+  <!-- Platform objects -->
+  <div class="platform" id="ground"></div>
+  <!-- new platforms go here ! -->
+  <!-- Clock-->
+  <p class="hidden" id="clock">Time</p>
+  <!-- Other -->
+</div>
+
+</body>
+<script src="scripts/levelgenerator.js" type="text/javascript"></script>
+<script src="scripts/animations.js" type="text/javascript"></script>
+<script src="scripts/controls.js" type="text/javascript"></script>
+<script src="scripts/physics.js" type="text/javascript"></script>
+<script src="scripts/menu.js" type="text/javascript"></script>
+<script src="scripts/classes.js" type="text/javascript"></script>
+<script src="scripts/main.js" type="text/javascript"></script>
+</html>

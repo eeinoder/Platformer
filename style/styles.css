@@ -1,0 +1,157 @@
+/* VARIABLES, SETTINGS */
+
+:root {
+  /* Player constants */
+  --playerwidth: 5vw;
+  --playerheight: 5vw;
+  --playerleft: 50vw;
+  --playertop: 50vh;
+  /* Pulse constants */
+  --pulsediam: 70vw;
+  /* Colors */
+  --blue: #2eb2ff;
+  --red: #ff2e2e;
+  --purple: #bd56fc;
+  --pink: #ffa6e9;
+  --darkgray: #555;
+  --gray: #bbb;
+}
+
+body { /* NOTE: this is SUPER important for disabling scroll / smooth play in adventure mode */
+  overflow: hidden;
+  background-color: var(--blue);
+}
+
+/* META CLASSES */
+
+.title {
+  position: relative;
+  z-index: 1;
+}
+
+.game {
+  position: relative;
+  z-index: 0;
+}
+
+
+/* GAME OBJECTS */
+
+.player {
+  position: absolute;
+  width: var(--playerwidth);
+  height: var(--playerheight);
+}
+
+#P1 {
+  background-color: #1efa4a;
+  margin: var(--playertop) var(--playerleft); /* 80vh 50vw; */
+}
+
+
+.platform {
+  position: absolute;
+  border-radius: 1vw;
+  /*background: url('imgs/brick.jpg') center center;
+  background-size: contain;*/
+}
+
+#ground {
+  /*background: url('imgs/grass.png') center center;*/
+  background-color: #555;
+}
+
+
+.pulse {
+  position: absolute;
+  border-radius: 50%;
+  /*display: inline-block;*/
+}
+
+#outerPulse {
+  background-color: var(--gray);
+}
+
+#innerPulse {
+  background-color: var(--blue);
+}
+
+
+
+/* NON-GAME ELEMENTS */
+
+.mode {
+
+}
+
+.menu {
+  position: absolute;
+  margin: 20vh 35vw;
+}
+
+.menu_button {
+  font-size: 3vw;
+  margin: 1vh 0;
+  width: 5vw;
+}
+
+h1 {
+  position: absolute;
+  font-size: 5vw;
+  width: 50vw;
+  margin: 4vh 28vw;
+}
+
+h2 {
+  font-size: 3vw;
+}
+
+h3 {
+  padding-top: 3vh;
+  font-size: 4vw;
+}
+
+
+
+/* OTHER SELECTORS */
+
+.hidden {
+  display: none;
+}
+
+.selected {
+
+}
+
+.noselect {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout : none
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+/*
+body {
+  background: url('imgs/kosmo1.jpg') center center;
+  background-size: cover;
+}
+
+.background {
+  position: absolute;
+  width: 104vw;
+  height: 55vw;
+  margin-top: 20vw;
+  margin-left: -5vw;
+}
+#bg1 {
+  background-color: #75fbfd;
+}
+#bg2 {
+  pointer-events: none;
+  background: url('imgs/kosmoshalo.png') no-repeat;
+  background-size: cover;
+}
+*/
