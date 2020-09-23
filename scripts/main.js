@@ -84,8 +84,9 @@ document.addEventListener('keypress', press);
 document.addEventListener('keydown', engageInput);
 document.addEventListener('keyup', releaseInput);
 
-// Virtual buttons
+// Virtual buttons // TODO: fix this, event listeners do not work the same way on iOS safari...
 // (enables touch screen controls. may not be compatible with Android devices.)
+/*
 document.addEventListener('mousedown', function(){
   is_mouse_down = true;
   engageInput(event);
@@ -96,7 +97,7 @@ document.addEventListener('mouseup', function(){
 });
 document.addEventListener('mouseover', engageInput);
 document.addEventListener('mouseout', releaseInput);
-
+*/
 
 
 /* ----------------------------- GAME HANDLERS ----------------------------- */
@@ -166,9 +167,8 @@ function initGame() {
   document.getElementsByClassName('title')[0].classList.add('hidden');
   hideMenu();
 
-  // TODO: if selected in menu, make virtual_button's visbile
-  document.getElementsByClassName('virtual_button_container')[0].classList.remove('hidden');
-  //document.getElementById('jump_button').innerHTML = '';
+  // TODO: if selected in menu, make virtual_button's visible. FIRST, make this work on mobile.
+  // document.getElementsByClassName('virtual_button_container')[0].classList.remove('hidden');
 }
 
 
