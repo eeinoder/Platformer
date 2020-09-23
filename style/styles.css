@@ -125,6 +125,39 @@ h3 {
   font-size: 4vw;
 }
 
+.virtual_button_container {
+  position: absolute;
+  z-index: 98;
+  margin-left: 5vw;
+  margin-top: calc(100vh - 27vw);
+}
+
+.virtual_button {
+  width: 10vw;
+  height: 10vw;
+  position: absolute;
+  padding: 1em;
+  background-color: #337ab7;
+  border: 1px solid #333;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 2vw;
+  vertical-align: middle;
+  line-height: 10vw;
+}
+
+#jump_button {
+  opacity: 1.0;
+}
+
+#left_button {
+  margin-left: 60vw;
+}
+
+#right_button {
+  margin-left: 75vw;
+}
+
 
 
 /* OTHER SELECTORS */

@@ -8,17 +8,17 @@ function engageInput(e) {
   }
 
   /* MOVE RIGHT */
-  if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+  if (e.code === 'ArrowRight' || e.code === 'KeyD' || (e.target.id === 'right_button' && is_mouse_down)) {
     player1.x_accel_right = init_x_accel;
   }
 
   /* MOVE LEFT */
-  else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+  else if (e.code === 'ArrowLeft' || e.code === 'KeyA' || (e.target.id === 'left_button' && is_mouse_down)) {
     player1.x_accel_left = -init_x_accel;
   }
 
   /* JUMP */
-  else if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
+  else if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW' || (e.target.id === 'jump_button' && is_mouse_down)) {
     if (!player1.is_space_down && player1.canJump()) {
       //animateStretch();
       if (player1.is_on_wall) {
@@ -70,17 +70,17 @@ function releaseInput(e) {
     return;
   }
   /* STOP MOVING RIGHT */
-  if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+  if (e.code === 'ArrowRight' || e.code === 'KeyD' || e.target.id === 'right_button') {
     player1.x_accel_right = 0;
   }
 
   /* STOP MOVING LEFT */
-  else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+  else if (e.code === 'ArrowLeft' || e.code === 'KeyA' || e.target.id === 'left_button') {
     player1.x_accel_left = 0;
   }
 
   /* STOP HOLDING JUMP */
-  else if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
+  else if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW' || e.target.id === 'jump_button') {
     if (!player1.is_grounded) {
       player1.y_speed += gravity * low_jump_multiplier;
     }
