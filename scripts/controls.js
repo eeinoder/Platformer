@@ -35,8 +35,30 @@ function engageInput(e) {
 
   /* USE PULSE */
   else if (e.code === 'ShiftRight' || e.code === 'KeyE') {
-    if (!player1.using_pulse) { // multiple pulses?
+    if (!player1.using_pulse && player1.unlocked_pulse) { // multiple pulses?
       readyPulse();
+    }
+  }
+
+  /* ZOOM IN */
+  else if (e.code === 'Equal') {
+    //zoom(zoom_factor); // Default is zoom_factor = 1.25;
+  }
+
+  /* ZOOM OUT */
+  else if (e.code === 'Minus') {
+    //zoom(1/zoom_factor);
+  }
+
+  // TODO: REMOVE AFTER TESTING !!!!
+  else if (e.code === 'KeyN') {
+    if (is_dark && !player1.using_torch) {
+      player1.using_torch = true;
+      readyHalo();
+    }
+    else {
+      player1.using_torch = false;
+      hideHalo();
     }
   }
 }

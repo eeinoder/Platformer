@@ -6,7 +6,7 @@ let last_clicked = '';
 
 function mouseOver(e) {
   // If this button is not selected
-  if (selected_mode !== e.target.id) {
+  if (current_mode !== e.target.id) {
     if (e.target.style.fontWeight !== 'bold') {
       e.target.style.color = 'red';
     }
@@ -33,10 +33,9 @@ function click(e) {
 
   }
   else if (e.target.id === 'start_button') {
-    // Update seledted_mode.
-    selected_mode = last_clicked;
     // Start game if valid game mode selected
-    if (game_modes.includes(selected_mode)) {
+    if (game_modes.includes(last_clicked)) {
+      selected_mode = last_clicked;
       is_game_start = false;
       startGame();
     }
@@ -82,8 +81,8 @@ function hideMenu() {
   document.getElementsByClassName('title')[0].classList.add('hidden');
   document.getElementsByClassName('game')[0].style.filter = "none";
   // REVERT SOME PAUSE VISUAL SETTINGS
-  if (last_clicked !== selected_mode) {
-    document.getElementById(selected_mode).style.fontWeight = 'bold';
+  if (last_clicked !== current_mode) {
+    document.getElementById(current_mode).style.fontWeight = 'bold';
     document.getElementById(last_clicked).style.fontWeight = 'normal';
   }
 }

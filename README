@@ -16,12 +16,11 @@ Move left
 player
 platforms
 
+
+
 // TODO: in "challenge mode", do not set platforms to "hidden", just turn off
 // collision. Their color will hide them.
 
-// TODO: REEALLY should lock viewport screen size if I can; all calculations done in
-// pixels so viewport size directly affects the physics (max, max jump height, accel, etc.)
-// Pretty good values:    outer/inner Width: 1160,      outer/inner Height: 967/904
 
 BUGS/FIXES:
 if you hold an input RIGHT after starting game before hitting ground, that input is
@@ -29,4 +28,17 @@ disabled. Possible fix: disable inputs until player is on ground for first time.
 
 improve wall jumping and wall collision
 
-remove motion trails if possible
+remove motion trails if possible (NOTE: this is because of refresh rate / frame rate issues)
+
+
+
+TODO:
+- work on color filter ("stained glass") objects
+  Define behavior: (a little more complicated)
+    * land on top and player stops (just like top is a normal platform)
+    * bottom of filter sits on a platform
+    *
+
+- level creation and transition (populating platform objects)
+  Reset world involves: define resetplatforms (get rid of html objects), call levelgenerator
+- title / menu screen

@@ -10,14 +10,18 @@
   --pulsediam: 70vw;
   /* Colors */
   --blue: #2eb2ff;
-  --red: #ff2e2e;
+  --red: #ff3300;
+  --green: #1efa4a;
+  --yellow: #ffff66;
+  --orange: #ff9933;
   --purple: #bd56fc;
   --pink: #ffa6e9;
   --darkgray: #555;
   --gray: #bbb;
+  --white: #fff;
 }
 
-body { /* NOTE: this is SUPER important for disabling scroll / smooth play in adventure mode */
+body { /* NOTE: this is SUPER important for disabling scroll / smooth side-scrolling */
   overflow: hidden;
   background-color: var(--blue);
 }
@@ -26,7 +30,8 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth play in ad
 
 .title {
   position: relative;
-  z-index: 1;
+  z-index: 99;
+  /*background-color: var(--blue);*/
 }
 
 .game {
@@ -39,13 +44,15 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth play in ad
 
 .player {
   position: absolute;
-  width: var(--playerwidth);
-  height: var(--playerheight);
+  z-index: 1;
 }
 
-#P1 {
-  background-color: #1efa4a;
-  margin: var(--playertop) var(--playerleft); /* 80vh 50vw; */
+
+.stainedglass {
+  position: absolute;
+  opacity: 0.5;
+  /*border: 1vw solid #ffffff;*/
+  z-index: 2;
 }
 
 
@@ -54,11 +61,7 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth play in ad
   border-radius: 1vw;
   /*background: url('imgs/brick.jpg') center center;
   background-size: contain;*/
-}
-
-#ground {
-  /*background: url('imgs/grass.png') center center;*/
-  background-color: #555;
+  z-index: 3;
 }
 
 
@@ -74,6 +77,17 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth play in ad
 
 #innerPulse {
   background-color: var(--blue);
+}
+
+.halo {
+  position: absolute;
+  border-radius: 50%;
+}
+
+#halo1 {
+  border: ;
+  box-shadow:
+    0 0 0 99999px rgba(0,0,0,1.0);
 }
 
 

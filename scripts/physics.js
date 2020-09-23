@@ -22,29 +22,27 @@ function updatePosition(interval) {
        NOTE2: once threshold is crossed
     */
 
-    // SOLUTION: keep track of offset but don't add offset to each comparison between player1.y and y_max_player
-    //
-    if (selected_mode !== 'challenge') {
+    if (current_mode !== 'challenge') {
       // X
-      if (player1.x-player1.x_offset > x_max_player && player1.x_speed >= 0) {
-        player1.x_offset = player1.x - x_max_player;
-        moveWorld('x', x_max_player);
+      if (player1.x-player1.x_offset > scroll_right_boundary && player1.x_speed >= 0) {
+        player1.x_offset = player1.x - scroll_right_boundary;
+        moveWorld('x', scroll_right_boundary);
       }
-      else if (player1.x-player1.x_offset < x_min_player && player1.x_speed <= 0) {
-        player1.x_offset = player1.x - x_min_player;
-        moveWorld('x', x_min_player);
+      else if (player1.x-player1.x_offset < scroll_left_boundary && player1.x_speed <= 0) {
+        player1.x_offset = player1.x - scroll_left_boundary;
+        moveWorld('x', scroll_left_boundary);
       }
       else {
         movePlayer('x');
       }
       // Y
-      if (player1.y-player1.y_offset > y_max_player && player1.y_speed >= 0) {
-        player1.y_offset = player1.y - y_max_player;
-        moveWorld('y', y_max_player);
+      if (player1.y-player1.y_offset > scroll_down_boundary && player1.y_speed >= 0) {
+        player1.y_offset = player1.y - scroll_down_boundary;
+        moveWorld('y', scroll_down_boundary);
       }
-      else if (player1.y-player1.y_offset < y_min_player && player1.y_speed <= 0) {
-        player1.y_offset = player1.y - y_min_player;
-        moveWorld('y', y_min_player);
+      else if (player1.y-player1.y_offset < scroll_up_boundary && player1.y_speed <= 0) {
+        player1.y_offset = player1.y - scroll_up_boundary;
+        moveWorld('y', scroll_up_boundary);
       }
       else {
         movePlayer('y');
@@ -70,7 +68,12 @@ function updatePosition(interval) {
         movePulse();
       }
     }
-    // TODO: put this at beginning of loop
+
+    // CHECK FOR PLAYER LUMINANCE
+    if (is_dark && player1.using_torch) {
+      moveHalo();
+    }
+
     // RECURSE IF GAME IS STILL IN PROGRESS
     if (!is_game_pause) {
       if (is_game_start) {
@@ -105,6 +108,38 @@ function updateX() {
     }
   }
   // WALL COLLISION
+  checkWallCollision();
+  // IS PLAYER INSIDE/PASSING THROUGH STAINED GLASS. TODO: generalize this to more glass sections.
+  checkPlayerFilter();
+}
+
+
+/* CALCULATE NEW Y POSITION */
+function updateY() {
+  // UPDATE Y SPEED
+  player1.y_speed += gravity
+  // ADD WALL FRICTION IF ON WALL: subtract speed in opposite direction proportional to gravity
+  if (player1.is_on_wall) {
+    player1.y_speed -= Math.sign(player1.y_speed)*gravity*wall_friction;
+  }
+  // ADD MULTPLIER TO MAKE FALL MORE SATISFYING, AND UPDATE GROUNDED BOOL
+  if (player1.speed !== 0) { // Player shouldnt jump if he's falling (idea: make this true to enable late jump off platforms)
+    player1.is_grounded = false;
+    if (player1.y_speed > 0) {
+      player1.y_speed += gravity * fall_multiplier;
+    }
+  }
+  // GROUND COLLISION
+  checkGroundCollision();
+  // DEATH
+  checkDeath();
+}
+
+
+
+
+/* ---------------------------------- HANDLERS --------------------------------*/
+function checkWallCollision() {
   if (player1.x < x_min+wall_jump_err || player1.x+player1.w > x_max-wall_jump_err) {
     if (player1.x < x_min) {
       player1.x = x_min;
@@ -121,32 +156,18 @@ function updateX() {
   }
 }
 
-
-/* CALCULATE NEW Y POSITION */
-// NOTE: we don't have to update platform.top(s) after scrolling because distance between player.y
-// and platform.top(s) is preserved (i.e. .y and .top are offset by the same amount)
-function updateY() {
+function checkGroundCollision() {
   var directly_beneath = null;
-  // UPDATE Y SPEED
-  player1.y_speed += gravity
-  // ADD WALL FRICTION IF ON WALL: subtract speed in opposite direction proportional to gravity
-  if (player1.is_on_wall) {
-    player1.y_speed -= Math.sign(player1.y_speed)*gravity*wall_friction;
-  }
-  // ADD MULTPLIER TO MAKE FALL MORE SATISFYING, AND UPDATE GROUNDED BOOL
-  if (player1.speed !== 0) { // Player shouldnt jump if he's falling (idea: make this true to enable late jump off platforms)
-    player1.is_grounded = false;
-    if (player1.y_speed > 0) {
-      player1.y_speed += gravity * fall_multiplier;
-    }
-  }
   // FIND ALL PLATFORMS UNDERNEATH PLAYER
-  for (let platform of platforms) {
+  for (let platform of non_players) { // TODO: 'non_players' back to 'platforms'
+    var has_clr_collision = platform.color === init_platform_color || platform.color === player1.color;
     if (!active_platforms.has(platform)) {
+      if (platform.id.includes('platform')) { // TODO: remove this
+      }
       player1.zones.delete(platform);
     }
     else {
-      if (player1.x+player1.w > platform.left && player1.x < platform.right) {
+      if (player1.x+player1.w > platform.left && player1.x < platform.right && has_clr_collision) {
         if (player1.y < platform.top) {
           player1.zones.add(platform);
         }
@@ -167,18 +188,20 @@ function updateY() {
   }
   player1.floor = directly_beneath;
   // CHECK FOR GROUND ('FLOOR') COLLISION
-  if (directly_beneath !== null) { // Note: if this is false, player can fall to death
+  if (player1.floor !== null) { // Note: if this is false, player can fall to death
     if (player1.y >= player1.floor.top) {
       player1.y = player1.floor.top;
       player1.y_speed = 0;
       player1.is_grounded = true;
       player1.has_wall_jumped = false; // reload wall jump
-      if (selected_mode === 'challenge') {
+      if (current_mode === 'challenge') {
         togglePlatforms();
       }
     }
   }
-  // CHECK FOR DEATH
+}
+
+function checkDeath() {
   if (player1.y + player1.h > window.outerHeight) {
     alert("You died.")
     is_game_start = false;
