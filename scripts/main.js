@@ -151,8 +151,8 @@ function initGame() {
   // RESET OTHER PARAMETERS THAT ARE MORE STATIC LEVEL TO LEVEL
   if (selected_mode === 'challenge') {
     hidePlatforms();
+    resetClock(); // TODO: move this out, put above hidePulse()
   }
-  resetClock();
   hidePulse();
   hideHalo();
 
@@ -211,6 +211,7 @@ function resetClock() {
   tick = 0;
   is_timer_start = false;
   document.getElementById('clock').innerHTML = '0.00'
+  document.getElementById('clock').classList.remove('hidden');
 }
 
 function hidePlatforms() {
