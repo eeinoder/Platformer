@@ -1,5 +1,49 @@
 // player and platform animations
 
+/* TODO: partition script into:
+ playermotion.js
+ playerabilities.js
+ worldmotion.js
+ challengemode.js
+ ...
+ */
+
+ /* ---------------------------- GAME OBJECT MOTION ------------------------- */
+
+ /* Side-scrolling Movement logic:
+    if (speed > 0 (i.e. moving to right) and x>max) moveWorld(), else movePlayer()
+    if (speed < 0 and x<xmin) moveWorld(), else movePlayer()
+    repeat for y (?)
+    NOTE: if y does same then need to caculate new top of platforms for collisions
+    NOTE2: once threshold is crossed
+ */
+function updatePosition() {
+  // X - position
+  if (player1.x-player1.x_offset > scroll_right_boundary && player1.x_speed >= 0) {
+    player1.x_offset = player1.x - scroll_right_boundary;
+    moveWorld('x', scroll_right_boundary);
+  }
+  else if (player1.x-player1.x_offset < scroll_left_boundary && player1.x_speed <= 0) {
+    player1.x_offset = player1.x - scroll_left_boundary;
+    moveWorld('x', scroll_left_boundary);
+  }
+  else {
+    movePlayer('x');
+  }
+  // Y - position
+  if (player1.y-player1.y_offset > scroll_down_boundary && player1.y_speed >= 0) {
+    player1.y_offset = player1.y - scroll_down_boundary;
+    moveWorld('y', scroll_down_boundary);
+  }
+  else if (player1.y-player1.y_offset < scroll_up_boundary && player1.y_speed <= 0) {
+    player1.y_offset = player1.y - scroll_up_boundary;
+    moveWorld('y', scroll_up_boundary);
+  }
+  else {
+    movePlayer('y');
+  }
+}
+
 function movePlayer(axis) {
   if (axis === 'x') {
     //document.getElementById(player1.id).style.marginLeft = player1.left();
@@ -27,28 +71,9 @@ function moveWorld(axis, ref_point) {
   }
 }
 
-/* ZOOM OBJECTS ABOUT CENTER OF SCREEN */
-// TODO: FIX IF POSSIBLE!!! I gather that floating point weirdness causes growing deviations from
-// expected size and distance from center with repeated iterations of zooming in/out.
-// Suppose 'scale' paramter = 1.25. We scale all object dimensions up by param 'scale'.
-// If an object's center,  is right of window center, to zoom in we move this object more right
-// by increasing distance from center, dfc = marginLeftCenter - 0.5*window.outerWidth, by 1.25.
-// So new marginLeft = marginLeft + (scale - 1) * dfc =
-function zoom(scale) { // marginLeft - center
-  let game_objects = non_players.concat(player1);
-  for (let game_object of game_objects) {
-    let obj = document.getElementById(game_object.id);
-    let obj_style = window.getComputedStyle(obj);
-    let offset = Math.round(100*(scale-1))/100; //
-    console.log(offset)
-    let dfc_left = parseFloat(obj_style.getPropertyValue('margin-left')) + parseFloat(obj_style.getPropertyValue('width'))/2 - window.innerWidth/2;
-    let dfc_top =  parseFloat(obj_style.getPropertyValue('margin-top')) + parseFloat(obj_style.getPropertyValue('height'))/2 - window.innerHeight/2;
-    obj.style.width = scale * parseFloat(obj_style.getPropertyValue('width')) + 'px';
-    obj.style.height = scale * parseFloat(obj_style.getPropertyValue('height')) + 'px';
-    obj.style.marginLeft = offset * dfc_left + parseFloat(obj_style.getPropertyValue('margin-left')) + 'px';
-    obj.style.marginTop = offset * dfc_top + parseFloat(obj_style.getPropertyValue('margin-top')) + 'px';
-  }
-}
+
+
+/* -------------------------------- ABILITIES ------------------------------ */
 
 function moveHalo() {
   // CENTER HALO AROUND PLAYER
@@ -62,6 +87,20 @@ function readyHalo() {
   halo.style.width = player1.halo_diameter + 'px';
   halo.style.height = player1.halo_diameter + 'px';
   halo.classList.remove('hidden');
+}
+
+function updatePulse() {
+  var inner_radius = player1.pulse_diameter/2 - player1.pulse_width;
+  // IF INNER RADIUS IS BIGGER THAN VIEWPORT DIMS STOP UPDATING PULSE AND HIDE IT.
+  if (inner_radius > 1.05 * window.outerWidth && inner_radius > 1.05 * window.outerHeight) {
+    hidePulse();
+  }
+  else {
+    // UPDATE PULSE POSITION
+    player1.pulse_diameter += player1.pulse_speed;
+    // MOVE PULSE
+    movePulse();
+  }
 }
 
 function movePulse() {

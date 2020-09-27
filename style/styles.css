@@ -1,5 +1,12 @@
 /* VARIABLES, SETTINGS */
 
+@font-face {
+    font-family: oswald;
+    src: url('fonts/Oswald-VariableFontWeight.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
   /* Player constants */
   --playerwidth: 5vw;
@@ -19,6 +26,7 @@
   --darkgray: #555;
   --gray: #bbb;
   --white: #fff;
+  --black: #000;
 }
 
 body { /* NOTE: this is SUPER important for disabling scroll / smooth side-scrolling */
@@ -26,27 +34,108 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth side-scrol
   background-color: var(--blue);
 }
 
-/* META CLASSES */
+/* TITLE */
 
-.title {
+.title_screen {
+  position: absolute;
+  border: 2px solid var(--white);
+  box-shadow:
+    0 0 0 99999px rgba(0,0,0,1.0);
+  background-color: var(--blue);
+  width: min(60vw, 60vh);
+  height: min(60vw, 60vh);
+  margin-left: calc((100% - min(60vw, 60vh))/2);
+  margin-top: 10vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.title_text {
   position: relative;
+  font-family: oswald;
+}
+
+#title {
+  font-size: min(12vw, 12vh);
+  width: min(50vw, 50vh);
+  margin: auto auto;
+}
+
+#click_prompt {
+  font-size: min(2vw, 2vh);
+  width: min(50vw, 50vh);
+  margin: auto auto;
+}
+/* TODO: Make 'Palette' and 'Former' separate, flex-start and flex-end in flex box */
+
+
+/* MENU */
+
+.menu_screen {
+  position: absolute;
   z-index: 99;
+  border: 2px solid var(--white);
+  border-radius: 1vw;
+  box-shadow:
+    0 0 0 99999px rgba(0,0,0,0.5);
+  background-color: var(--blue);
+  width: min(60vw, 60vh);
+  height: min(60vw, 60vh);
+  margin-left: calc((100% - min(60vw, 60vh))/2);
+  margin-top: 10vh;
+  z-index: 99;
+  display: flex;
   /*background-color: var(--blue);*/
 }
+
+
+.menu_card { /* 3 Menu Cards: Game, Controls, and Audio/Visual */
+  position: relative;
+  margin: auto auto+10%;
+  border: 2px solid tomato;
+  width: min(50vw, 50vh);
+  height: min(40vw, 40vh);
+}
+
+#game_menu {
+
+}
+
+#controls_menu {
+
+}
+
+#audiovis_menu {
+
+}
+
+
+/* "Select game mode" */
+.menu {
+  position: absolute;
+  margin: 0 2vw;
+}
+
+.menu_button {
+  font-size: min(3vw, 3vh);
+  margin: 1vh 0;
+  width: 5vw;
+}
+
+
+
+
+/* GAME */
 
 .game {
   position: relative;
   z-index: 0;
 }
 
-
-/* GAME OBJECTS */
-
 .player {
   position: absolute;
   z-index: 1;
 }
-
 
 .stainedglass {
   position: absolute;
@@ -54,7 +143,6 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth side-scrol
   /*border: 1vw solid #ffffff;*/
   z-index: 2;
 }
-
 
 .platform {
   position: absolute;
@@ -91,40 +179,7 @@ body { /* NOTE: this is SUPER important for disabling scroll / smooth side-scrol
 }
 
 
-
-/* NON-GAME ELEMENTS */
-
-.mode {
-
-}
-
-.menu {
-  position: absolute;
-  margin: 20vh 35vw;
-}
-
-.menu_button {
-  font-size: 3vw;
-  margin: 1vh 0;
-  width: 5vw;
-}
-
-h1 {
-  position: absolute;
-  font-size: 5vw;
-  width: 50vw;
-  margin: 4vh 28vw;
-}
-
-h2 {
-  font-size: 3vw;
-}
-
-h3 {
-  padding-top: 3vh;
-  font-size: 4vw;
-}
-
+/* VIRTUAL BUTTONS */
 .virtual_button_container {
   position: absolute;
   z-index: 98;
@@ -156,6 +211,19 @@ h3 {
 
 #right_button {
   margin-left: 75vw;
+}
+
+
+
+/* TRANSITION SCREEN */
+.transition {
+  position: absolute;
+  background-color: rgba(0,0,0,1.0); /* black(000) or white(fff) */
+  margin-top: -7vh;
+  margin-left: -1vw;
+  width: 120%;
+  height: 120%;
+  z-index: 100;
 }
 
 

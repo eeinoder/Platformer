@@ -23,7 +23,22 @@ var vh = window.innerHeight;
 // Then add stainedglass before 'ground', ...
 
 var level_data = [
-  // LEVEL 0 - "DEMO/TUTORIAL"
+  // "TITLE" LEVEL (index 0) (Define necessary conditions for "title" stage here)
+  [{'id':'ground','w':2.5, 'h':.5, 'top':1.1, 'left':-.8, 'clr':'#555555'},
+  {'id':'platform1','w':.10, 'h':.02, 'top':.65, 'left':.60, 'clr':'#555555'},
+  {'id':'player1','w':.10, 'h':.10, 'top':.45, 'left':.60, 'clr':'#ffffff'}],
+  // LEVEL 1 (index 1)
+  [{'id':'ground','w':2.5, 'h':.5, 'top':.895, 'left':-.8, 'clr':'#555555'},
+  {'id':'platform1','w':.12, 'h':.02, 'top':.80, 'left':.10, 'clr':'#555555'},
+  {'id':'platform2','w':.12, 'h':.02, 'top':.40, 'left':.50, 'clr':'#555555'},
+  {'id':'player1','w':.05, 'h':.05, 'top':.50, 'left':.50, 'clr':'#ffffff'}],
+  // LEVEL 2 (index 2)
+  [{'id':'ground','w':2.5, 'h':.5, 'top':.895, 'left':-.8, 'clr':'#555555'},
+  {'id':'platform1','w':.12, 'h':.02, 'top':.80, 'left':.10, 'clr':'#555555'},
+  {'id':'platform2','w':.20, 'h':.02, 'top':.20, 'left':.15, 'clr':'#555555'},
+  {'id':'platform3','w':.10, 'h':.02, 'top':.40, 'left':.22, 'clr':'#555555'},
+  {'id':'player1','w':.05, 'h':.05, 'top':.50, 'left':.50, 'clr':'#ffffff'}],
+  // LEVEL 3 (index 3)
   [{'id':'ground','w':2.5, 'h':.5, 'top':.895, 'left':-.8, 'clr':'#555555'},
   {'id':'platform1','w':.12, 'h':.02, 'top':.80, 'left':.10, 'clr':'#555555'},
   {'id':'platform2','w':.12, 'h':.02, 'top':.60, 'left':.30, 'clr':'#555555'},
@@ -36,15 +51,7 @@ var level_data = [
   {'id':'platform9','w':.12, 'h':.02, 'top':.80, 'left':.10, 'clr':'#555555'},
   {'id':'player1','w':.05, 'h':.05, 'top':.50, 'left':.50, 'clr':'#ffffff'},
   {'id':'stainedglass1','w':.30, 'h':.20, 'top':.695, 'left':1.10, 'clr':'#ff3300'},
-  {'id':'stainedglass2','w':.30, 'h':.20, 'top':.695, 'left':-0.35, 'clr':'#0033ff'}],
-  // LEVEL 1
-  [{'id':'ground','w':2.5, 'h':.5, 'top':.895, 'left':-.8, 'clr':'#555555'},
-  {'id':'platform1','w':.12, 'h':.02, 'top':.80, 'left':.10, 'clr':'#555555'},
-  {'id':'platform6','w':.20, 'h':.02, 'top':.20, 'left':.15, 'clr':'#555555'},
-  {'id':'platform7','w':.10, 'h':.02, 'top':.40, 'left':.22, 'clr':'#555555'},
-  {'id':'player1','w':.05, 'h':.05, 'top':.50, 'left':.50, 'clr':'#ffffff'}],
-  // LEVEL 2
-  []
+  {'id':'stainedglass2','w':.30, 'h':.20, 'top':.695, 'left':-0.35, 'clr':'#0033ff'}]
 ];
 
 
@@ -72,12 +79,12 @@ function generateLevel(level) {
 
 
 function createDOMObject(obj_vals) {
-  var h_scale = vh;
+  var min = Math.min(vh, vw);
+  // NOTE: 'min' helps to maintain ideal proportions in game subject to
+  // window resizing. Long term this won't be necessary, either by implementing
+  // dynamic zoom, more clever style techniques, or simply by locking window size.
   var new_obj = document.createElement('div');
   var class_name = obj_vals['id'].replace(/[0-9]/g, '');
-  if (class_name === 'player') {
-    h_scale = vw;
-  }
   if (class_name === 'ground') {
     class_name = 'platform';
   }
@@ -85,10 +92,10 @@ function createDOMObject(obj_vals) {
   new_obj.id = obj_vals['id'];
   new_obj.classList.add(class_name);
   new_obj.style.backgroundColor = obj_vals['clr'];
-  new_obj.style.width = obj_vals['w'] * vw + 'px';
-  new_obj.style.height = obj_vals['h'] * h_scale + 'px';
-  new_obj.style.marginTop = obj_vals['top'] * vh + 'px';
-  new_obj.style.marginLeft = obj_vals['left'] * vw + 'px';
+  new_obj.style.width = obj_vals['w'] * min + 'px';
+  new_obj.style.height = obj_vals['h'] * min + 'px';
+  new_obj.style.marginTop = obj_vals['top'] * min + 'px';
+  new_obj.style.marginLeft = obj_vals['left'] * min + 'px';
   // INSERT OBJECT IN APPROPRIATE LOCATION (BEFORE NAMED OBJECT)
   if (class_name === 'platform') {
     let halo = document.getElementById('halo1');

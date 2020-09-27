@@ -7,8 +7,22 @@
 </head>
 <body>
 
-<div class="title noselect">
-  <h1>Platformer Demo</h1>
+<div class="title_screen hidden noselect">
+  <h1 class="title_text" id="title">Shade Shifter</h1>
+  <h3 class="title_text" id="click_prompt">Press any key to start<h3>
+</div>
+
+<!-- TODO: check and modify as needed all references to menu, menu_screen, menu_button's -->
+<!-- Check menu.js, main.js, and styles.css especially -->
+<!-- Also check references to title and title_screen for good measure-->
+<!-- TODO: refactor use of zIndex for different things, getting confusing in styles.css -->
+<div class="menu_screen noselect">
+  <div class="menu_card" id="game_menu">
+  </div>
+  <div class="menu_card hidden" id="controls_menu">
+  </div>
+  <div class="menu_card hidden" id="audiovis_menu">
+  </div>
   <div class="menu noselect">
     <h2>Select Game Mode:</h2>
     <p class="menu_button mode" id="classic">Classic</p>
@@ -17,20 +31,16 @@
   </div>
 </div>
 
-<div class="game hidden">
+<div class="game hidden noselect">
   <!-- Player pulse object -->
   <span class="pulse hidden" id="outerPulse"></span>
   <span class="pulse hidden" id="innerPulse"></span>
-
-  <!-- Player objects -->
-
-  <!-- Platform objects -->
-
+  <!-- Player objects inserted below -->
+  <!-- Platform objects inserted below -->
   <!-- Player halo object -->
   <div class="halo hidden" id="halo1"></div>
-
   <!-- Clock-->
-  <p class="hidden" id="clock">Time</p>
+  <p id="clock">Time</p>
 </div>
 
 <!-- Virtual buttons -->
@@ -41,11 +51,15 @@
   <div class="virtual_button" id="right_button">RIGHT</div>
 </div-->
 
+<div class="transition hidden" id="fade"></div>
+
 </body>
 <script src="scripts/levelgenerator.js" type="text/javascript"></script>
+<script src="scripts/transitions.js" type="text/javascript"></script>
 <script src="scripts/animations.js" type="text/javascript"></script>
 <script src="scripts/controls.js" type="text/javascript"></script>
 <script src="scripts/physics.js" type="text/javascript"></script>
+<script src="scripts/title.js" type="text/javascript"></script>
 <script src="scripts/menu.js" type="text/javascript"></script>
 <script src="scripts/classes.js" type="text/javascript"></script>
 <script src="scripts/main.js" type="text/javascript"></script>

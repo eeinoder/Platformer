@@ -5,8 +5,11 @@
 // Then, all calculations are done using Js objects and then the DOM/game objects are updated
 // and things happen on screen.
 
+/* ---------------------------- GAME OBJECTS----------------------------- */
+
 /* PLAYER CLASS */
-class Player { // TODO: create HTML player object with script, then remove '.getComputedStyle' below
+class Player {
+  // TODO: create HTML player object with script, then remove '.getComputedStyle' below
   constructor(id) {
     this.id = id;
     // Useful properties (in unit px)
@@ -19,6 +22,8 @@ class Player { // TODO: create HTML player object with script, then remove '.get
     this.is_space_down = false;
     this.is_grounded = true;
     this.is_on_wall = false;
+    this.on_left_wall = false; // TODO: replace these with wall objects that are in collision... like w/ platforms
+    this.on_right_wall = false;
     this.has_wall_jumped = false;
     this.zones = new Set();
     this.floor; // platform directly beneath
@@ -79,5 +84,40 @@ class Stainedglass extends Platform {
   constructor(id) {
     super(id);
     this.isReady = true; // True if player has left stainedglass region, Then player can interact again
+  }
+}
+
+
+/* COLLECTIBLE / "DOTS" CLASS */
+class Collectible {
+  constructor(id) {
+    // 
+  }
+}
+
+
+/* ---------------------------- DATASTRUCTURES----------------------------- */
+
+class Queue {
+  constructor() {
+    this.elements = [];
+  }
+  enqueue(element) {
+    this.elements.push(element);
+  }
+  dequeue() {
+    return this.elements.shift();
+  }
+  peek() {
+    return !this.isEmpty() ? this.elements[0] : undefined;
+  }
+  last() {
+    return !this.isEmpty() ? this.elements[this.elements.length-1] : undefined;
+  }
+  length() {
+    return this.elements.length;
+  }
+  isEmpty() {
+    return this.elements.length === 0;
   }
 }

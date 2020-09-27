@@ -67,19 +67,17 @@ function pause() {
 function unpause() {
   is_game_pause = false;
   hideMenu();
-  updatePosition(frame_time);
+  updateFrame(frame_time);
 }
 
 function showMenu() {
   // SHOW PAUSE MENU, ADD GRAY FILTER TO GAME
-  document.getElementsByClassName('title')[0].classList.remove('hidden');
-  document.getElementsByClassName('game')[0].style.filter = "grayscale(100%) brightness(80%)";
+  document.getElementsByClassName('menu_screen')[0].classList.remove('hidden');
 }
 
 function hideMenu() {
   // HIDE PAUSE MENU
-  document.getElementsByClassName('title')[0].classList.add('hidden');
-  document.getElementsByClassName('game')[0].style.filter = "none";
+  document.getElementsByClassName('menu_screen')[0].classList.add('hidden');
   // REVERT SOME PAUSE VISUAL SETTINGS
   if (last_clicked !== current_mode) {
     document.getElementById(current_mode).style.fontWeight = 'bold';

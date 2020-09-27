@@ -1,72 +1,36 @@
 /* physics.js */
-function updatePosition(interval) {
+
+/*
+New system to work with title, card, level transitions:
+Once player touches ground for first time, remove black screen,
+otherwise it ruins the momentum if need to fade in every time restart level.
+
+*/
+
+function updateFrame(interval) {
   // CHECK THAT GAME IS NOT PAUSED
   updateX();
   updateY();
-  // RECURSIVELY UPDATE POSITION
+
+  // RECURSIVELY UPDATE POSITION, OBJECT ANIMATION
   setTimeout(function () {
     // UPDATE ClOCK
+    tick += interval;
     if (is_timer_start) {
-      tick += interval;
       document.getElementById('clock').innerHTML = tick/1000;
     }
+
+    // PROCESS NEXT FADE IN/OUT REQUEST IF ANY
+    fadeHandler();
+
     // UPDATE POSITION
     player1.x += player1.x_speed;
     player1.y += player1.y_speed;
-
-    /* Movement algorithm:
-       if (speed > 0 (i.e. moving to right) and x>max) moveWorld(), else movePlayer()
-       if (speed < 0 and x<xmin) moveWorld(), else movePlayer()
-       repeat for y (?)
-       NOTE: if y does same then need to caculate new top of platforms for collisionz
-       NOTE2: once threshold is crossed
-    */
-
-    if (current_mode !== 'challenge') {
-      // X
-      if (player1.x-player1.x_offset > scroll_right_boundary && player1.x_speed >= 0) {
-        player1.x_offset = player1.x - scroll_right_boundary;
-        moveWorld('x', scroll_right_boundary);
-      }
-      else if (player1.x-player1.x_offset < scroll_left_boundary && player1.x_speed <= 0) {
-        player1.x_offset = player1.x - scroll_left_boundary;
-        moveWorld('x', scroll_left_boundary);
-      }
-      else {
-        movePlayer('x');
-      }
-      // Y
-      if (player1.y-player1.y_offset > scroll_down_boundary && player1.y_speed >= 0) {
-        player1.y_offset = player1.y - scroll_down_boundary;
-        moveWorld('y', scroll_down_boundary);
-      }
-      else if (player1.y-player1.y_offset < scroll_up_boundary && player1.y_speed <= 0) {
-        player1.y_offset = player1.y - scroll_up_boundary;
-        moveWorld('y', scroll_up_boundary);
-      }
-      else {
-        movePlayer('y');
-      }
-    }
-
-    else {
-      movePlayer('x');
-      movePlayer('y');
-    }
+    updatePosition();
 
     // CHECK FOR PLAYER PULSE. MOVE PULSE OUTWARD RADIALLY ABOUT PLAYER.
     if (player1.using_pulse) {
-      var inner_radius = player1.pulse_diameter/2 - player1.pulse_width;
-      // IF INNER RADIUS IS BIGGER THAN VIEWPORT DIMS STOP UPDATING PULSE AND HIDE IT.
-      if (inner_radius > 1.05 * window.outerWidth && inner_radius > 1.05 * window.outerHeight) {
-        hidePulse();
-      }
-      else {
-        // UPDATE PULSE POSITION
-        player1.pulse_diameter += player1.pulse_speed;
-        // MOVE PULSE
-        movePulse();
-      }
+      updatePulse();
     }
 
     // CHECK FOR PLAYER LUMINANCE
@@ -77,7 +41,7 @@ function updatePosition(interval) {
     // RECURSE IF GAME IS STILL IN PROGRESS
     if (!is_game_pause) {
       if (is_game_start) {
-        updatePosition(interval);
+        updateFrame(interval);
       }
       else {
         endGame();
@@ -139,21 +103,34 @@ function updateY() {
 
 
 /* ---------------------------------- HANDLERS --------------------------------*/
+// TODO: AFTER ADDING WALL OBJECTS CHECK ALL WALLS LIKE DO FOR ALL PLATFORMS IN GROUND COLLISION !!!
+// MUST CHECK IF IN WALL 'ZONE', i.e. THAT PLAYER TOP < WALL TOP && PLAYER BOTTOM > WALL BOTTOM.
 function checkWallCollision() {
-  if (player1.x < x_min+wall_jump_err || player1.x+player1.w > x_max-wall_jump_err) {
-    if (player1.x < x_min) {
+  //console.log(player1.on_right_wall)
+  if (player1.x <= x_min || player1.x+player1.w >= x_max) { // TODO: add wall_jump_err
+    if (player1.x < x_min) { // Collision with left wall.
       player1.x = x_min;
       player1.x_speed = 0;
+      //player1.x_accel_left = 0;
     }
-    else if (player1.x > x_max - player1.w) {
+    else if (player1.x > x_max - player1.w) { // Collision with right wall.
       player1.x = x_max - player1.w;
       player1.x_speed = 0;
+      //player1.x_accel_right = 0;
     }
-    player1.is_on_wall = true;
+    // If object was, or is now, at either wall...
+    if (player1.x === x_min) {
+      player1.on_left_wall = true;
+    }
+    else if (player1.x === x_max - player1.w) {
+      player1.on_right_wall = true;
+    }
   }
   else {
-    player1.is_on_wall = false;
+    player1.on_left_wall = false;
+    player1.on_right_wall = false;
   }
+  player1.is_on_wall = player1.on_left_wall || player1.on_right_wall;
 }
 
 function checkGroundCollision() {
@@ -162,8 +139,6 @@ function checkGroundCollision() {
   for (let platform of non_players) { // TODO: 'non_players' back to 'platforms'
     var has_clr_collision = platform.color === init_platform_color || platform.color === player1.color;
     if (!active_platforms.has(platform)) {
-      if (platform.id.includes('platform')) { // TODO: remove this
-      }
       player1.zones.delete(platform);
     }
     else {
@@ -202,7 +177,9 @@ function checkGroundCollision() {
 }
 
 function checkDeath() {
-  if (player1.y + player1.h > window.outerHeight) {
+  // NOTE: if sidescrolling disabled, you can fall and not die and not be able to
+  // see character with this condition. THAT IS BAD.
+  if (player1.floor === null && player1.y + player1.h > window.outerHeight) {
     alert("You died.")
     is_game_start = false;
   }
